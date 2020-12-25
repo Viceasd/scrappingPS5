@@ -6,6 +6,14 @@ const { fetchAuthorProfile } = require('./app/scotch');
 const { fetchPCFactoryProfile} = require('./app/scotch');
 const { fetchLiderProfile} = require('./app/scotch');
 const { fetchParisProfile} = require('./app/scotch');
+const { fetchMicroPlayProfile} = require('./app/scotch');
+const { fetchZmartProfile} = require('./app/scotch');
+const { fetchFalabellaProfile} = require('./app/scotch');
+const { fetchLaPolarProfile} = require('./app/scotch');
+const { fetchRipleyProfile} = require('./app/scotch');
+const { fetchWePlayProfile} = require('./app/scotch');
+const { fetchSonyProfile} = require('./app/scotch');
+
 var nodemailer = require('nodemailer');
 
 var alive = true;
@@ -23,21 +31,51 @@ app.get('/scotch/:author', (req, res, next) => {
 });
 
 app.get('/pcFactory', (req,res, next) => {
-	
-	console.log(fetchPCFactoryProfile(req));
-	
+	asyncCallPcFactory(req);
+	//console.log("pfcatory: "+asyncCallPcFactory(req));
 	return sendResponse(res)(fetchPCFactoryProfile(req));
 });
 
 app.get('/lider', (req,res, next) => {
-	let respuesta =fetchLiderProfile(req);
-	console.log(respuesta);
+	asyncCallLider(req);
 	sendResponse(res)(fetchLiderProfile(req));
 });
 
 app.get('/paris', (req,res, next) => {
-	let respuesta =fetchParisProfile(req);
+	asyncCallParis(req);
 	sendResponse(res)(fetchParisProfile(req));
+});
+
+app.get('/microplay', (req,res, next) => {
+	asyncCallMicroPlay(req);
+	sendResponse(res)(fetchMicroPlayProfile(req));
+});
+
+app.get('/zmart', (req,res, next) => {
+	asyncCallZmart(req);
+	sendResponse(res)(fetchZmartProfile(req));
+});
+
+app.get('/falabella', (req,res, next) => {
+	asyncCallFalabella(req);
+	sendResponse(res)(fetchFalabellaProfile(req));
+});
+app.get('/lapolar', (req,res, next) => {
+	asyncCallLaPolar(req);
+	sendResponse(res)(fetchLaPolarProfile(req));
+});
+
+app.get('/ripley', (req,res, next) => {
+	asyncCallRipley(req);
+	sendResponse(res)(fetchRipleyProfile(req));
+});
+app.get('/weplay', (req,res, next) => {
+	asyncCallWePlay(req);
+	sendResponse(res)(fetchWePlayProfile(req));
+});
+app.get('/sony', (req,res, next) => {
+	asyncCallSony(req);
+	sendResponse(res)(fetchSonyProfile(req));
 });
 
 app.get('/alive/:seguir', (req,res, next) => {
@@ -56,40 +94,21 @@ app.get('/vive', (req,res, next) => {
 
 
 
-function sleep(millis) {
-	return new Promise(resolve => setTimeout(resolve, millis));
-  }
-  
-  // Usage in async function
-  async function sleepFiveMinutes() {
-	await sleep(1000*60*5)
-	console.log("five minutes has elapsed")
-  }
-  
-  // Usage in normal function
-  function test2() {
-	sleep(1000).then(() => {
-	  console.log("one second has elapsed")
-	});
-  }
-  
 
 
 // crear llamado a metodos 
 app.get('/scanPages', (req,res, next) => {
-	let respuesta;
-	while(alive){
-		respuesta=fetchPCFactoryProfile(req);
-		if(!respuesta.includes("Ficha Producto No disponible")){
-			envioCorreo(respuesta);
-		}
-		respuesta = fetchLiderProfile(req);
-		if(!respuesta.includes("404")){
-			envioCorreo(respuesta);
-		}		
-		sleepFiveMinutes();		
-	}
-	sendResponse(res)(fetchPCFactoryProfile(req));
+	asyncCallPcFactory(req);		
+	asyncCallLider(req);
+	asyncCallParis(req);
+	asyncCallMicroPlay(req);
+	asyncCallZmart(req);	
+	asyncCallFalabella(req);
+	asyncCallLaPolar(req);
+	asyncCallWePlay(req);
+	asyncCallRipley(req);
+	asyncCallSony(req);
+	return res.send("servicio corriendo");
 });
 
 function envioCorreo(link) {
@@ -97,13 +116,13 @@ function envioCorreo(link) {
 		service: 'gmail',
 		host: 'smtp.gmail.com',
 		auth: {
-			user: "*****@gmail.com",
-			pass: "**********"
+			user: "*************@gmail.com",
+			pass: "****************"
 		}
 	});
 	var mailOptions = {
-		from: '**********@gmail.com',
-		to: '*************@gmail.com',
+		from: '***************@gmail.com',
+		to: '***************@gmail.com',
 		subject: 'Sending Email using Node.js[nodemailer]',
 		text: 'That was easy!'+link
 	};
@@ -116,5 +135,122 @@ function envioCorreo(link) {
 		}
 	});
 }
+
+async function asyncCallPcFactory(req) {
+	console.log('calling asyncCallPcFactory');
+	const resultados = await fetchPCFactoryProfile(req);
+	if(!resultados.data.includes("Ficha Producto No disponible")){
+		console.log("pasa por el if");
+		if(req.res.statusCode==200){
+			envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+		 }
+	}
+}
+
+async function asyncCallLider(req) {
+	console.log('calling asyncCallLider');
+	const resultados1 = await fetchLiderProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+		if( resultados1!=undefined ){
+            envioCorreo(resultados1.urlCompleta);
+		}
+	
+}
+
+async function asyncCallParis(req) {
+	console.log('calling asyncCallParis');
+	const resultados1 = await fetchParisProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+		if(resultados1!= undefined && req.res.statusCode==200){
+			envioCorreo(resultados1.urlCompleta);
+		}
+}
+
+async function asyncCallMicroPlay(req) {
+	console.log('calling asyncCallMicroPlay');
+	const resultados1 = await fetchMicroPlayProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+		//console.log(resultados1.stringHtml);
+		if(resultados1.url!= null && req.res.statusCode==200){
+			envioCorreo(resultados1.urlCompleta);
+		}
+}
+async function asyncCallZmart(req) {
+	console.log('calling asyncCallZmart');
+	const resultados = await fetchZmartProfile(req);
+	if(!resultados.data.includes("PRODUCTO AGOTADO")){
+		console.log("pasa por el if");
+		if(req.res.statusCode==200){
+		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+		}
+	}
+}
+
+async function asyncCallFalabella(req) {
+	console.log('calling asyncCallFalabella');
+	const resultados = await fetchFalabellaProfile(req);
+	if(!resultados.data.includes("Producto sin stock")){
+		console.log("pasa por el if");
+		if(req.res.statusCode==200){
+		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+		}
+	}
+}
+
+async function asyncCallLaPolar(req) {
+	console.log('calling asyncCallLaPolar');
+	const resultados = await fetchLaPolarProfile(req);
+	if(!resultados.data.includes("Agotado")){
+		console.log("pasa por el if");
+		if(req.res.statusCode==200){
+		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+		}
+	}
+}
+
+async function asyncCallWePlay(req) {
+	console.log('calling asyncCallWePlay');
+	const resultados1 = await fetchWePlayProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+	//	console.log(resultados1.stringHtml);
+		if(resultados1!= undefined && req.res.statusCode==200){
+			envioCorreo(resultados1.urlCompleta);
+		}
+}
+
+async function asyncCallRipley(req) {
+	console.log('calling asyncCallRipley');
+	const resultados1 = await fetchRipleyProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+	//	console.log(resultados1.stringHtml);
+		if(resultados1!= undefined && req.res.statusCode==200){
+			envioCorreo(resultados1.urlCompleta);
+		}
+
+	
+}
+
+async function asyncCallSony(req) {
+	console.log('calling asyncCallSony');
+	const resultados1 = await fetchSonyProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+	//	console.log(resultados1.stringHtml);
+		if(resultados1!= undefined && req.res.statusCode==200){
+			envioCorreo(resultados1.urlCompleta);
+		}
+	
+}
+
+
+
+  
+
+  
 //crear un main que esté corriendo la app
 app.listen(port, () => console.log(`App started on port ${port}.`));
