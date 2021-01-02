@@ -17,9 +17,6 @@ const {
 // scotch.io (Base URL)
 const SCOTCH_BASE = "https://scotch.io";
 const PCFACTORY_URL = "https://www.pcfactory.cl/producto/39192-sony-consola-playstation-5-ps5";
-//const PCFACTORY_URL = "https://www.pcfactorysdfgdfgdf.cl/producto/39192-sony-consola-playstation-5-ps5";
-// hacer const del resto de las urls
-//const LIDER_URL = "https://www.pcfactory.cl/producto/39192-sony-consola-playstation-5-ps5";
 const LIDER_URL = "https://www.lider.cl/catalogo/product/sku/1086920";
 const PARIS_URL = "https://www.paris.cl/consola-ps5-440437999.html";
 const MICROPLAY_URL = "https://www.microplay.cl/producto/consola-ps5-sony/";
@@ -29,6 +26,7 @@ const LA_POLAR_URL = "https://www.lapolar.cl/consola-sony-playstation-5/23395401
 const RIPLEY_URL ="https://simple.ripley.cl/tecno/mundo-gamer/consolas?source=menu&facet=mfName_ntk_cs%253A%2522SONY%2522"; 
 const WE_PLAY_URL = "https://www.weplay.cl/ps5?utm_source=banner%20home&utm_medium=organico&utm_campaign=landing%20ps5%20banner%20home";
 const SONY_URL = "https://store.sony.cl/playstation5/p";
+const MOVISTAR_URL = "https://catalogo.movistar.cl/fullprice/consola-ps5.html"
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////
@@ -282,6 +280,18 @@ const extractRipleyProfile = $ => {
 
 };
 
+const extractMovistarProfile = $ => {
+	const noEncuentraDato = $("#product-sin-stock")[0].attribs.title;
+	const metaUrl = $("meta[property='og:url']");
+
+	return Promise.all([
+		noEncuentraDato,
+		extractUrlAttribute('content')(metaUrl),
+		MOVISTAR_URL
+	]).then(([ data,url,urlCompleta]) => ({ data,url,urlCompleta }));
+
+};
+
 /**
  * Fetches the Scotch profile of the given author
  */
@@ -329,11 +339,14 @@ const fetchSonyProfile = $ =>{
 const fetchRipleyProfile = $ =>{
 	return composeAsync(extractRipleyProfile, fetchHtmlFromUrl)(RIPLEY_URL);
 };
+const fetchMovistarProfile = $ =>{
+	return composeAsync(extractMovistarProfile, fetchHtmlFromUrl)(MOVISTAR_URL);
+};
 
 // aca dejar los profile que agregar
 module.exports = { fetchAuthorProfile,fetchPCFactoryProfile,fetchLiderProfile,fetchParisProfile,
 				   fetchMicroPlayProfile, fetchZmartProfile, fetchFalabellaProfile,fetchLaPolarProfile,
-				   fetchWePlayProfile,fetchSonyProfile,fetchRipleyProfile
+				   fetchWePlayProfile,fetchSonyProfile,fetchRipleyProfile,fetchMovistarProfile
                 };
 
 
