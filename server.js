@@ -13,8 +13,18 @@ const { fetchLaPolarProfile} = require('./app/scotch');
 const { fetchRipleyProfile} = require('./app/scotch');
 const { fetchWePlayProfile} = require('./app/scotch');
 const { fetchSonyProfile} = require('./app/scotch');
+const { fetchMovistarProfile} = require('./app/scotch');
+
+var propertiesReader = require('properties-reader');
+var properties = propertiesReader('../scrapping.properties');
 
 var nodemailer = require('nodemailer');
+
+var correoFrom = properties.get('correo.from');
+
+var correoClave = properties.get('correo.pass');
+
+var correoPara = properties.get('correo.to');
 
 var alive = true;
 
@@ -77,6 +87,10 @@ app.get('/sony', (req,res, next) => {
 	asyncCallSony(req);
 	sendResponse(res)(fetchSonyProfile(req));
 });
+app.get('/movistar', (req,res, next) => {
+	asyncCallMovistar(req);
+	sendResponse(res)(fetchMovistarProfile(req));
+});
 
 app.get('/alive/:seguir', (req,res, next) => {
 	alive = req.params.seguir
@@ -94,8 +108,56 @@ app.get('/vive', (req,res, next) => {
 
 
 
-
-
+function sleep(millis) {
+	return new Promise(resolve => setTimeout(resolve, millis));
+  }
+  
+  // Usage in async function
+  async function sleepFiveMinutes() {
+	await sleep(1000);
+	console.log("five minutes has elapsed");
+  }
+  
+  // Usage in normal function
+  function test2() {
+	sleep(1000*30).then(() => {
+	  console.log("30 seconds has elapsed")
+	});
+  }
+  
+  function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  async function delayedGreeting() {
+/*	console.log("Hello");
+	await sleep(2000);
+	console.log("World!");
+	await sleep(2000);
+	console.log("Goodbye!");*/
+    // req;
+	while(alive){
+		await sleep(1000*3);
+		console.log("30 seconds has elapsed");
+		asyncCallPcFactory(req);		
+		asyncCallLider(req);
+		asyncCallParis(req);
+		asyncCallMicroPlay(req);
+		asyncCallZmart(req);	
+		asyncCallFalabella(req);
+		asyncCallLaPolar(req);
+		asyncCallWePlay(req);
+		asyncCallRipley(req);
+		asyncCallSony(req);
+			
+			
+			//sleepFiveMinutes();
+				
+	} 
+}
+  
+//  delayedGreeting();
+ // sleepFiveMinutes();
 // crear llamado a metodos 
 app.get('/scanPages', (req,res, next) => {
 	asyncCallPcFactory(req);		
@@ -108,6 +170,7 @@ app.get('/scanPages', (req,res, next) => {
 	asyncCallWePlay(req);
 	asyncCallRipley(req);
 	asyncCallSony(req);
+	asyncCallMovistar(req);
 	return res.send("servicio corriendo");
 });
 
@@ -116,15 +179,15 @@ function envioCorreo(link) {
 		service: 'gmail',
 		host: 'smtp.gmail.com',
 		auth: {
-			user: "*************@gmail.com",
-			pass: "****************"
+			user: correoFrom,
+			pass: correoClave
 		}
 	});
 	var mailOptions = {
-		from: '***************@gmail.com',
-		to: '***************@gmail.com',
-		subject: 'Sending Email using Node.js[nodemailer]',
-		text: 'That was easy!'+link
+		from: correoFrom,
+		to: correoPara,
+		subject: 'se envia correo de stock ps5',
+		text: 'Link de PS5: '+link
 	};
 	transporter.sendMail(mailOptions, function (error, info) {
 		if (error) {
@@ -149,6 +212,10 @@ async function asyncCallPcFactory(req) {
 
 async function asyncCallLider(req) {
 	console.log('calling asyncCallLider');
+	console.log('correoFROM: '+correoFrom);
+	console.log("correoClave: "+correoClave);
+	console.log('correo para: '+correoPara);
+
 	const resultados1 = await fetchLiderProfile(req)
 		.then(number => {return  number;}) 
 		.catch(error => console.error("error"));
@@ -246,10 +313,19 @@ async function asyncCallSony(req) {
 		}
 	
 }
+async function asyncCallMovistar(req) {
+	console.log('calling asyncCallMovistar');
+	const resultados = await fetchMovistarProfile(req);
+	if(!resultados.data.includes("Sin stock web")){
+		console.log("pasa por el if");
+		if(req.res.statusCode==200){
+		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+		}
+	}
+}
 
 
 
-  
 
   
 //crear un main que esté corriendo la app
