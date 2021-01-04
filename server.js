@@ -202,7 +202,7 @@ function envioCorreo(link) {
 async function asyncCallPcFactory(req) {
 	console.log('calling asyncCallPcFactory');
 	const resultados = await fetchPCFactoryProfile(req);
-	if(!resultados.data.includes("Ficha Producto No disponible")){
+	if(resultados.data){
 		console.log("pasa por el if");
 		if(req.res.statusCode==200){
 			envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);

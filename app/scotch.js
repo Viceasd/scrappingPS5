@@ -16,7 +16,8 @@ const {
 
 // scotch.io (Base URL)
 const SCOTCH_BASE = "https://scotch.io";
-const PCFACTORY_URL = "https://www.pcfactory.cl/producto/39192-sony-consola-playstation-5-ps5";
+//const PCFACTORY_URL = "https://www.pcfactory.cl/producto/39192-sony-consola-playstation-5-ps5";
+const PCFACTORY_URL = "https://www.pcfactory.cl/buscar?valor=ps5";
 const LIDER_URL = "https://www.lider.cl/catalogo/product/sku/1086920";
 const PARIS_URL = "https://www.paris.cl/consola-ps5-440437999.html";
 const MICROPLAY_URL = "https://www.microplay.cl/producto/consola-ps5-sony/";
@@ -152,11 +153,13 @@ const extractAuthorProfile = $ => {
 };
 
 const extractPageProfile = $ => {
-	const noEncuentraDato = $("#center > div.contenido-center > div > div > div > div.ficha_titulos > h1");
+	
+    const noEncuentraDato = $("#calugas-productos").html().toLocaleLowerCase().includes("playstation") || $("#calugas-productos").html().toLocaleLowerCase().includes("consola");
+//	const noEncuentraDato = $("#calugas-productos").html().toLocaleLowerCase().includes("ps5") || $("#calugas-productos").html().toLocaleLowerCase().includes("ps5");
 	const metaUrl = $("meta[property='og:url']");
 
 	return Promise.all([
-		fetchElemInnerText(noEncuentraDato.contents().first()),
+		noEncuentraDato,
 		extractUrlAttribute('content')(metaUrl),
 		PCFACTORY_URL
 	]).then(([ data,url,urlCompleta]) => ({ data,url,urlCompleta }));
