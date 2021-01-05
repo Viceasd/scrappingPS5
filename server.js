@@ -170,7 +170,7 @@ app.get('/scanPages', (req,res, next) => {
 	asyncCallWePlay(req);
 	asyncCallRipley(req);
 	asyncCallSony(req);
-	asyncCallMovistar(req);
+    asyncCallMovistar(req);
 	return res.send("servicio corriendo");
 });
 
@@ -315,13 +315,19 @@ async function asyncCallSony(req) {
 }
 async function asyncCallMovistar(req) {
 	console.log('calling asyncCallMovistar');
-	const resultados = await fetchMovistarProfile(req);
-	if(!resultados.data.includes("Sin stock web")){
-		console.log("pasa por el if");
-		if(req.res.statusCode==200){
-		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+
+	const resultados1 = await fetchMovistarProfile(req)
+		.then(number => {return  number;}) 
+		.catch(error => console.error("error"));
+	//	console.log(resultados1.stringHtml);
+		if(resultados1!= undefined && req.res.statusCode==200){
+			if(!resultados.data.includes("Sin stock web")){
+				console.log("pasa por el if");
+				if(req.res.statusCode==200){
+				   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
+				}
+			}			
 		}
-	}
 }
 
 
