@@ -205,6 +205,7 @@ async function asyncCallPcFactory(req) {
 	if(resultados.data){
 		console.log("pasa por el if");
 		if(req.res.statusCode==200){
+			console.log("pcfactory");
 			envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
 		 }
 	}
@@ -220,6 +221,7 @@ async function asyncCallLider(req) {
 		.then(number => {return  number;}) 
 		.catch(error => console.error("error"));
 		if( resultados1!=undefined ){
+			console.log("lider");
             envioCorreo(resultados1.urlCompleta);
 		}
 	
@@ -231,6 +233,7 @@ async function asyncCallParis(req) {
 		.then(number => {return  number;}) 
 		.catch(error => console.error("error"));
 		if(resultados1!= undefined && req.res.statusCode==200){
+			console.log("paris");
 			envioCorreo(resultados1.urlCompleta);
 		}
 }
@@ -242,6 +245,7 @@ async function asyncCallMicroPlay(req) {
 		.catch(error => console.error("error"));
 		//console.log(resultados1.stringHtml);
 		if(resultados1.url!= null && req.res.statusCode==200){
+			console.log("microplay");
 			envioCorreo(resultados1.urlCompleta);
 		}
 }
@@ -251,6 +255,7 @@ async function asyncCallZmart(req) {
 	if(!resultados.data.includes("PRODUCTO AGOTADO")){
 		console.log("pasa por el if");
 		if(req.res.statusCode==200){
+			console.log("zmart");
 		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
 		}
 	}
@@ -262,6 +267,7 @@ async function asyncCallFalabella(req) {
 	if(!resultados.data.includes("Producto sin stock")){
 		console.log("pasa por el if");
 		if(req.res.statusCode==200){
+			console.log("falabella");
 		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
 		}
 	}
@@ -273,6 +279,7 @@ async function asyncCallLaPolar(req) {
 	if(!resultados.data.includes("Agotado")){
 		console.log("pasa por el if");
 		if(req.res.statusCode==200){
+			console.log("lapolar");
 		   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
 		}
 	}
@@ -285,6 +292,7 @@ async function asyncCallWePlay(req) {
 		.catch(error => console.error("error"));
 	//	console.log(resultados1.stringHtml);
 		if(resultados1!= undefined && req.res.statusCode==200){
+			console.log("weplay");
 			envioCorreo(resultados1.urlCompleta);
 		}
 }
@@ -296,6 +304,7 @@ async function asyncCallRipley(req) {
 		.catch(error => console.error("error"));
 	//	console.log(resultados1.stringHtml);
 		if(resultados1!= undefined && req.res.statusCode==200){
+			console.log("ripley");
 			envioCorreo(resultados1.urlCompleta);
 		}
 
@@ -309,6 +318,7 @@ async function asyncCallSony(req) {
 		.catch(error => console.error("error"));
 	//	console.log(resultados1.stringHtml);
 		if(resultados1!= undefined && req.res.statusCode==200){
+			console.log("Sony");
 			envioCorreo(resultados1.urlCompleta);
 		}
 	
@@ -324,6 +334,7 @@ async function asyncCallMovistar(req) {
 			if(!resultados.data.includes("Sin stock web")){
 				console.log("pasa por el if");
 				if(req.res.statusCode==200){
+					console.log("movistar");
 				   envioCorreo(resultados.data+"<br>"+resultados.urlCompleta);
 				}
 			}			

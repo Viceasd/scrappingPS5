@@ -269,7 +269,7 @@ const extractSonyProfile = $ => {
 	return Promise.all([
 		extractUrlAttribute('content')(metaUrl),
 		SONY_URL
-	]).then(([ data,url,urlCompleta]) => ({ data,url,urlCompleta }));
+	]).then(([ url,urlCompleta]) => ({ url,urlCompleta }));
 
 };
 
