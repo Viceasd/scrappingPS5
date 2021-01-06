@@ -265,11 +265,14 @@ const extractWePlayProfile = $ => {
 
 const extractSonyProfile = $ => {
 	const metaUrl = $("meta[property='og:url']");
+	const agotado = $("p").html();
 
 	return Promise.all([
 		extractUrlAttribute('content')(metaUrl),
+		agotado,
 		SONY_URL
-	]).then(([ url,urlCompleta]) => ({ url,urlCompleta }));
+		
+	]).then(([ url,agotado,urlCompleta]) => ({ url,agotado,urlCompleta }));
 
 };
 

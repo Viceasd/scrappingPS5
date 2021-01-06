@@ -318,8 +318,11 @@ async function asyncCallSony(req) {
 		.catch(error => console.error("error"));
 	//	console.log(resultados1.stringHtml);
 		if(resultados1!= undefined && req.res.statusCode==200){
-			console.log("Sony");
-			envioCorreo(resultados1.urlCompleta);
+			console.log("Sony: "+resultados1.agotado);
+			if(!resultados1.agotado.includes("Produto Esgotado")){
+				envioCorreo(resultados1.urlCompleta);
+			}
+			
 		}
 	
 }
