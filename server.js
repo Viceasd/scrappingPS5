@@ -334,7 +334,7 @@ async function asyncCallMovistar(req) {
 		.catch(error => console.error("error"));
 	//	console.log(resultados1.stringHtml);
 		if(resultados1!= undefined && req.res.statusCode==200){
-			if(!resultados.data.includes("Sin stock web")){
+			if(!resultados1.data.includes("Sin stock web")){
 				console.log("pasa por el if");
 				if(req.res.statusCode==200){
 					console.log("movistar");
